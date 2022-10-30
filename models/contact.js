@@ -20,6 +20,10 @@ const contactShema = new Schema(
       type: Boolean,
       default: false,
     },
+    owner: {
+      type: String,
+      ref: "user",
+    },
   },
   { versionKey: false, timestamps: true }
 );

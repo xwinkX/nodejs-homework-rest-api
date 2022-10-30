@@ -1,5 +1,9 @@
 const { Schema, model } = require("mongoose");
+
 const Joi = require("joi");
+
+const errors = (errors) =>
+  new Error("Помилка від Joi або іншої бібліотеки валідації");
 
 const { hendleSaveerrors } = require("../helpers");
 
@@ -24,4 +28,26 @@ const userSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-usertShema.post("save", hendleSaveerrors);
+userSchema.post("save", hendleSaveerrors);
+
+const User = model("user", userSchema);
+
+const registerSchema = Joi.object({
+  password: Joi.string().min(6).required().error(errors),
+  email: Joi.string().email().required().error(errors),
+});
+
+const loginSchema = Joi.object({
+  password: Joi.string().min(6).required().error(errors),
+  email: Joi.string().email().required().error(errors),
+});
+
+const schemas = {
+  registerSchema,
+  loginSchema,
+};
+
+module.exports = {
+  User,
+  schemas,
+};
