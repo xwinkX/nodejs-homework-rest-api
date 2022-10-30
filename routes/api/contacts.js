@@ -10,9 +10,9 @@ const { schemas } = require("../../models/contact");
 
 const router = express.Router();
 
-router.get("/", ctrlWrapper(ctrl.getAll));
+router.get("/", authenticate, ctrlWrapper(ctrl.getAll));
 
-router.get("/:id", isValidId, ctrlWrapper(ctrl.getById));
+router.get("/:id", authenticate, isValidId, ctrlWrapper(ctrl.getById));
 
 router.post(
   "/",
@@ -21,10 +21,11 @@ router.post(
   ctrlWrapper(ctrl.add)
 );
 
-router.delete("/:id", isValidId, ctrlWrapper(ctrl.removeById));
+router.delete("/:id", authenticate, isValidId, ctrlWrapper(ctrl.removeById));
 
 router.put(
   "/:id",
+  authenticate,
   isValidId,
   validateBody(schemas.addSchema),
   ctrlWrapper(ctrl.updateById)
@@ -32,6 +33,7 @@ router.put(
 
 router.patch(
   "/:id/favorite",
+  authenticate,
   isValidId,
   validateBody(schemas.updatefavoriteSchema),
   ctrlWrapper(ctrl.updateFavorite)
