@@ -6,9 +6,7 @@ const { nanoid } = require("nanoid");
 
 const { User } = require("../../models/user");
 
-const { RequestError, sendEmail } = require("../../helpers");
-
-const { BASE_URL } = process.env;
+const { RequestError, sendEmail, createVerifyEmail } = require("../../helpers");
 
 const register = async (req, res) => {
   const { email, password, subscription } = req.body;
@@ -27,11 +25,7 @@ const register = async (req, res) => {
     verificationToken,
   });
 
-  const mail = {
-    to: email,
-    subject: "Verifiy email",
-    html: `<a href="${BASE_URL}/api/auth/verify/${verificationToken}">Click verify email</a>`,
-  };
+  const mail = createVerifyEmail(email, verificationToken);
 
   await sendEmail(mail);
 
